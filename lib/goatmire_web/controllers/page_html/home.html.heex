@@ -1,0 +1,16 @@
+<Layouts.flash_group flash={@flash} />
+<div class="mx-auto max-w-xl px-4 py-20 space-y-6">
+  <h1 class="text-3xl font-bold">Goatmire</h1>
+  <p class="text-base-content/80">
+    Minimal Ash Framework learning app with two UIs for the same authors/posts domain:
+    Phoenix LiveView and Hologram. Both update across browser tabs.
+  </p>
+  <p class="flex flex-wrap gap-3">
+    <a href={~p"/blog"} class="btn btn-primary">LiveView /blog</a>
+    <a href="/hologram" class="btn btn-secondary">Hologram /hologram</a>
+  </p>
+  <p class="text-sm text-base-content/60">
+    Database: SQLite via AshSqlite (see README). For Hologram in dev, start with
+    <code>mix holo</code> (sets <code>HOLOGRAM_START=1</code>).
+  </p>
+</div>
