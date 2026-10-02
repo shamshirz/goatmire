@@ -43,8 +43,10 @@ pub type Msg {
   PostAuthorChanged(String)
   PostTitleChanged(String)
   PostBodyChanged(String)
-  SubmitAuthor
-  SubmitPost
+  /// Prefer FormData from the submit event so automation / paste still works
+  /// even if `on_input` did not update the model.
+  SubmitAuthor(List(#(String, String)))
+  SubmitPost(List(#(String, String)))
   AuthorCreateFinished(Result(Author, String))
   PostCreateFinished(Result(Post, String))
   BlogChanged
@@ -102,20 +104,36 @@ fn update(model: Model, msg: Msg) -> #(Model, Effect(Msg)) {
 
     PostBodyChanged(post_body) -> #(Model(..model, post_body:), effect.none())
 
-    SubmitAuthor -> {
-      let name = string.trim(model.author_name)
+    SubmitAuthor(fields) -> {
+      let name =
+        form_value(fields, "name")
+        |> fallback_nonempty(model.author_name)
+        |> string.trim
+
       case name {
         "" -> #(
           Model(..model, error: Some("Name is required."), flash: None),
           effect.none(),
         )
-        _ -> #(Model(..model, flash: None, error: None), create_author(name))
+        _ -> #(
+          Model(..model, author_name: name, flash: None, error: None),
+          create_author(name),
+        )
       }
     }
 
-    SubmitPost -> {
-      let title = string.trim(model.post_title)
-      let author_id = model.post_author_id
+    SubmitPost(fields) -> {
+      let author_id =
+        form_value(fields, "author_id")
+        |> fallback_nonempty(model.post_author_id)
+      let title =
+        form_value(fields, "title")
+        |> fallback_nonempty(model.post_title)
+        |> string.trim
+      let body =
+        form_value(fields, "body")
+        |> fallback_nonempty(model.post_body)
+
       case author_id, title {
         "", _ -> #(
           Model(..model, error: Some("Choose an author."), flash: None),
@@ -126,8 +144,15 @@ fn update(model: Model, msg: Msg) -> #(Model, Effect(Msg)) {
           effect.none(),
         )
         _, _ -> #(
-          Model(..model, flash: None, error: None),
-          create_post(author_id, title, model.post_body),
+          Model(
+            ..model,
+            post_author_id: author_id,
+            post_title: title,
+            post_body: body,
+            flash: None,
+            error: None,
+          ),
+          create_post(author_id, title, body),
         )
       }
     }
@@ -276,6 +301,20 @@ fn post_decoder() -> decode.Decoder(Post) {
   decode.success(Post(id:, title:, body:))
 }
 
+fn form_value(fields: List(#(String, String)), key: String) -> String {
+  case list.find(fields, fn(pair) { pair.0 == key }) {
+    Ok(#(_, value)) -> value
+    Error(_) -> ""
+  }
+}
+
+fn fallback_nonempty(value: String, fallback: String) -> String {
+  case string.trim(value) {
+    "" -> fallback
+    trimmed -> trimmed
+  }
+}
+
 // ---------------------------------------------------------------------------
 // View
 // ---------------------------------------------------------------------------
@@ -354,7 +393,7 @@ fn create_author_section(model: Model) -> Element(Msg) {
       [
         attribute.id("author-form"),
         attribute.class("flex flex-wrap gap-3 items-end"),
-        event.on_submit(fn(_) { SubmitAuthor }),
+        event.on_submit(SubmitAuthor),
       ],
       [
         html.div([attribute.class("grow min-w-48")], [
@@ -399,7 +438,7 @@ fn create_post_section(model: Model) -> Element(Msg) {
           [
             attribute.id("post-form"),
             attribute.class("space-y-3"),
-            event.on_submit(fn(_) { SubmitPost }),
+            event.on_submit(SubmitPost),
           ],
           [
             html.div([], [
