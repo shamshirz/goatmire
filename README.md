@@ -31,17 +31,18 @@ That installs the pinned toolchain from `mise.toml`:
 | --- | --- | --- |
 | Erlang/OTP | 27.2.4 | Runtime for Elixir / Mix |
 | Elixir | 1.18.2-otp-27 | App + Hologram `~> 0.10.1` |
-| Gleam | 1.11.1 | `/gleam` Lustre SPA |
+| Gleam | 1.15.4 | `/gleam` Lustre SPA (`gleam_stdlib` needs ≥ 1.14) |
 | Node.js | 20.20.2 | Hologram JS asset compile |
 | Bun | 1.2.23 | `lustre_dev_tools` build (`mix assets.gleam`) |
+| Rebar3 | 3.24.0 | Gleam Erlang deps (e.g. `hpack_erl`) on `PATH` |
 
 Also needed from the OS (not managed by mise):
 
 - SQLite 3 (`sqlite3` on `PATH`)
-- Hex / Rebar (`mix local.hex`, `mix local.rebar` — usually prompted on first Mix use)
+- Hex (`mix local.hex` — usually prompted on first Mix use)
 
 Activate mise in your shell (`mise activate` / direnv / shims) so `elixir`, `mix`,
-`gleam`, `node`, and `bun` resolve to the pinned versions.
+`gleam`, `node`, `bun`, and `rebar3` resolve to the pinned versions.
 
 If Elixir TLS to Hex fails in a proxied environment, also set:
 

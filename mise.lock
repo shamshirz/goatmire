@@ -68,7 +68,15 @@ url = "https://builds.hex.pm/builds/elixir/v1.18.2-otp-27.zip"
 checksum = "sha256:694e56534db9074e78a9e0b53c5f5281b60e8ea83c5abfcbdeed70c20387ddee"
 url = "https://builds.hex.pm/builds/elixir/v1.18.2-otp-27.zip"
 
+[tools.elixir."platforms.linux-x64-baseline"]
+checksum = "sha256:694e56534db9074e78a9e0b53c5f5281b60e8ea83c5abfcbdeed70c20387ddee"
+url = "https://builds.hex.pm/builds/elixir/v1.18.2-otp-27.zip"
+
 [tools.elixir."platforms.linux-x64-musl"]
+checksum = "sha256:694e56534db9074e78a9e0b53c5f5281b60e8ea83c5abfcbdeed70c20387ddee"
+url = "https://builds.hex.pm/builds/elixir/v1.18.2-otp-27.zip"
+
+[tools.elixir."platforms.linux-x64-musl-baseline"]
 checksum = "sha256:694e56534db9074e78a9e0b53c5f5281b60e8ea83c5abfcbdeed70c20387ddee"
 url = "https://builds.hex.pm/builds/elixir/v1.18.2-otp-27.zip"
 
@@ -80,7 +88,15 @@ url = "https://builds.hex.pm/builds/elixir/v1.18.2-otp-27.zip"
 checksum = "sha256:694e56534db9074e78a9e0b53c5f5281b60e8ea83c5abfcbdeed70c20387ddee"
 url = "https://builds.hex.pm/builds/elixir/v1.18.2-otp-27.zip"
 
+[tools.elixir."platforms.macos-x64-baseline"]
+checksum = "sha256:694e56534db9074e78a9e0b53c5f5281b60e8ea83c5abfcbdeed70c20387ddee"
+url = "https://builds.hex.pm/builds/elixir/v1.18.2-otp-27.zip"
+
 [tools.elixir."platforms.windows-x64"]
+checksum = "sha256:694e56534db9074e78a9e0b53c5f5281b60e8ea83c5abfcbdeed70c20387ddee"
+url = "https://builds.hex.pm/builds/elixir/v1.18.2-otp-27.zip"
+
+[tools.elixir."platforms.windows-x64-baseline"]
 checksum = "sha256:694e56534db9074e78a9e0b53c5f5281b60e8ea83c5abfcbdeed70c20387ddee"
 url = "https://builds.hex.pm/builds/elixir/v1.18.2-otp-27.zip"
 
@@ -101,6 +117,10 @@ url = "https://builds.hex.pm/builds/otp/arm64/ubuntu-24.04/OTP-27.2.4.tar.gz"
 checksum = "sha256:53cb1d4c84b9d60a651cb69ab194a58b9428cd663db2862e0bab9547e9c6f5c9"
 url = "https://builds.hex.pm/builds/otp/amd64/ubuntu-24.04/OTP-27.2.4.tar.gz"
 
+[tools.erlang."platforms.linux-x64-baseline"]
+checksum = "sha256:53cb1d4c84b9d60a651cb69ab194a58b9428cd663db2862e0bab9547e9c6f5c9"
+url = "https://builds.hex.pm/builds/otp/amd64/ubuntu-24.04/OTP-27.2.4.tar.gz"
+
 [[tools.erlang]]
 version = "27.2.4"
 backend = "core:erlang"
@@ -117,55 +137,87 @@ url_api = "https://api.github.com/repos/erlef/otp_builds/releases/assets/2309906
 url = "https://github.com/erlef/otp_builds/releases/download/OTP-27.2.4/otp-x86_64-apple-darwin.tar.gz"
 url_api = "https://api.github.com/repos/erlef/otp_builds/releases/assets/230991341"
 
+[tools.erlang."platforms.macos-x64-baseline"]
+url = "https://github.com/erlef/otp_builds/releases/download/OTP-27.2.4/otp-x86_64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/erlef/otp_builds/releases/assets/230991341"
+
 [tools.erlang."platforms.windows-x64"]
 url = "https://github.com/erlang/otp/releases/download/OTP-27.2.4/otp_win64_27.2.4.zip"
 url_api = "https://api.github.com/repos/erlang/otp/releases/assets/231032820"
 
+[tools.erlang."platforms.windows-x64-baseline"]
+url = "https://github.com/erlang/otp/releases/download/OTP-27.2.4/otp_win64_27.2.4.zip"
+url_api = "https://api.github.com/repos/erlang/otp/releases/assets/231032820"
+
 [[tools.gleam]]
-version = "1.11.1"
+version = "1.15.4"
 backend = "aqua:gleam-lang/gleam"
-specifiers = ["1.11.1"]
+specifiers = ["1.15.4"]
 
 [tools.gleam."platforms.linux-arm64"]
-checksum = "sha256:22d4c9299f57f712210df7f48d1c84f99f13abfd9e067a6b290abfdab384161d"
-url = "https://github.com/gleam-lang/gleam/releases/download/v1.11.1/gleam-v1.11.1-aarch64-unknown-linux-musl.tar.gz"
-url_api = "https://api.github.com/repos/gleam-lang/gleam/releases/assets/261288408"
+checksum = "sha256:f145cc26ae0906d287f0c8dacede6a405a2dd888877d901dff64c288a2f1ec1f"
+url = "https://github.com/gleam-lang/gleam/releases/download/v1.15.4/gleam-v1.15.4-aarch64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/gleam-lang/gleam/releases/assets/394838914"
 provenance = "github-attestations"
 
 [tools.gleam."platforms.linux-arm64-musl"]
-checksum = "sha256:22d4c9299f57f712210df7f48d1c84f99f13abfd9e067a6b290abfdab384161d"
-url = "https://github.com/gleam-lang/gleam/releases/download/v1.11.1/gleam-v1.11.1-aarch64-unknown-linux-musl.tar.gz"
-url_api = "https://api.github.com/repos/gleam-lang/gleam/releases/assets/261288408"
+checksum = "sha256:f145cc26ae0906d287f0c8dacede6a405a2dd888877d901dff64c288a2f1ec1f"
+url = "https://github.com/gleam-lang/gleam/releases/download/v1.15.4/gleam-v1.15.4-aarch64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/gleam-lang/gleam/releases/assets/394838914"
 provenance = "github-attestations"
 
 [tools.gleam."platforms.linux-x64"]
-checksum = "sha256:31649fab05f982c51d7553cc4a2d3e615ee49348f7162fe75d48f71331618033"
-url = "https://github.com/gleam-lang/gleam/releases/download/v1.11.1/gleam-v1.11.1-x86_64-unknown-linux-musl.tar.gz"
-url_api = "https://api.github.com/repos/gleam-lang/gleam/releases/assets/261288434"
+checksum = "sha256:7c93bcd951e4aa59ffcaf1791e112ccc83127cc4cd2f16820b31647ce521f4c7"
+url = "https://github.com/gleam-lang/gleam/releases/download/v1.15.4/gleam-v1.15.4-x86_64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/gleam-lang/gleam/releases/assets/394838954"
+provenance = "github-attestations"
+
+[tools.gleam."platforms.linux-x64-baseline"]
+checksum = "sha256:7c93bcd951e4aa59ffcaf1791e112ccc83127cc4cd2f16820b31647ce521f4c7"
+url = "https://github.com/gleam-lang/gleam/releases/download/v1.15.4/gleam-v1.15.4-x86_64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/gleam-lang/gleam/releases/assets/394838954"
 provenance = "github-attestations"
 
 [tools.gleam."platforms.linux-x64-musl"]
-checksum = "sha256:31649fab05f982c51d7553cc4a2d3e615ee49348f7162fe75d48f71331618033"
-url = "https://github.com/gleam-lang/gleam/releases/download/v1.11.1/gleam-v1.11.1-x86_64-unknown-linux-musl.tar.gz"
-url_api = "https://api.github.com/repos/gleam-lang/gleam/releases/assets/261288434"
+checksum = "sha256:7c93bcd951e4aa59ffcaf1791e112ccc83127cc4cd2f16820b31647ce521f4c7"
+url = "https://github.com/gleam-lang/gleam/releases/download/v1.15.4/gleam-v1.15.4-x86_64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/gleam-lang/gleam/releases/assets/394838954"
+provenance = "github-attestations"
+
+[tools.gleam."platforms.linux-x64-musl-baseline"]
+checksum = "sha256:7c93bcd951e4aa59ffcaf1791e112ccc83127cc4cd2f16820b31647ce521f4c7"
+url = "https://github.com/gleam-lang/gleam/releases/download/v1.15.4/gleam-v1.15.4-x86_64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/gleam-lang/gleam/releases/assets/394838954"
 provenance = "github-attestations"
 
 [tools.gleam."platforms.macos-arm64"]
-checksum = "sha256:a2d492592d86539b1f51ae81f344dff71870b23479bf4d00d78512c6f9eaf1e5"
-url = "https://github.com/gleam-lang/gleam/releases/download/v1.11.1/gleam-v1.11.1-aarch64-apple-darwin.tar.gz"
-url_api = "https://api.github.com/repos/gleam-lang/gleam/releases/assets/261288398"
+checksum = "sha256:74b03d43916d0147ce75ac909bb3636b8045c09303ec38256ebea5138fb2218f"
+url = "https://github.com/gleam-lang/gleam/releases/download/v1.15.4/gleam-v1.15.4-aarch64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/gleam-lang/gleam/releases/assets/394838889"
 provenance = "github-attestations"
 
 [tools.gleam."platforms.macos-x64"]
-checksum = "sha256:f250284e4998f4e7d274d60f8d4f9d5d5cf1519a86bd21065ba77dbff6065054"
-url = "https://github.com/gleam-lang/gleam/releases/download/v1.11.1/gleam-v1.11.1-x86_64-apple-darwin.tar.gz"
-url_api = "https://api.github.com/repos/gleam-lang/gleam/releases/assets/261288422"
+checksum = "sha256:7624faf7ea4f401be7800aba612ba51d97bb86dd0aa9b7c769802860a9e524a4"
+url = "https://github.com/gleam-lang/gleam/releases/download/v1.15.4/gleam-v1.15.4-x86_64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/gleam-lang/gleam/releases/assets/394838939"
+provenance = "github-attestations"
+
+[tools.gleam."platforms.macos-x64-baseline"]
+checksum = "sha256:7624faf7ea4f401be7800aba612ba51d97bb86dd0aa9b7c769802860a9e524a4"
+url = "https://github.com/gleam-lang/gleam/releases/download/v1.15.4/gleam-v1.15.4-x86_64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/gleam-lang/gleam/releases/assets/394838939"
 provenance = "github-attestations"
 
 [tools.gleam."platforms.windows-x64"]
-checksum = "sha256:1cb54473bed54d74e213f993a7f269ed27afa761d693be681b9bf1a3e618d4d5"
-url = "https://github.com/gleam-lang/gleam/releases/download/v1.11.1/gleam-v1.11.1-x86_64-pc-windows-msvc.zip"
-url_api = "https://api.github.com/repos/gleam-lang/gleam/releases/assets/261288428"
+checksum = "sha256:10d39e079780f1040606e51d4da837b90df449c168216e2141b6ae2f867fd7c3"
+url = "https://github.com/gleam-lang/gleam/releases/download/v1.15.4/gleam-v1.15.4-x86_64-pc-windows-msvc.zip"
+url_api = "https://api.github.com/repos/gleam-lang/gleam/releases/assets/394838947"
+provenance = "github-attestations"
+
+[tools.gleam."platforms.windows-x64-baseline"]
+checksum = "sha256:10d39e079780f1040606e51d4da837b90df449c168216e2141b6ae2f867fd7c3"
+url = "https://github.com/gleam-lang/gleam/releases/download/v1.15.4/gleam-v1.15.4-x86_64-pc-windows-msvc.zip"
+url_api = "https://api.github.com/repos/gleam-lang/gleam/releases/assets/394838947"
 provenance = "github-attestations"
 
 [[tools.node]]
@@ -185,7 +237,15 @@ url = "https://unofficial-builds.nodejs.org/download/release/v20.20.2/node-v20.2
 checksum = "sha256:19e56f0825510207dd904f087fe52faa0a4eb6b2aab5f0ea7a33830d04888b8b"
 url = "https://nodejs.org/dist/v20.20.2/node-v20.20.2-linux-x64.tar.gz"
 
+[tools.node."platforms.linux-x64-baseline"]
+checksum = "sha256:19e56f0825510207dd904f087fe52faa0a4eb6b2aab5f0ea7a33830d04888b8b"
+url = "https://nodejs.org/dist/v20.20.2/node-v20.20.2-linux-x64.tar.gz"
+
 [tools.node."platforms.linux-x64-musl"]
+checksum = "sha256:0a335b43b5f0a3279d9c411b333a55ce98c02b875ba14033952c809ef89ac773"
+url = "https://unofficial-builds.nodejs.org/download/release/v20.20.2/node-v20.20.2-linux-x64-musl.tar.gz"
+
+[tools.node."platforms.linux-x64-musl-baseline"]
 checksum = "sha256:0a335b43b5f0a3279d9c411b333a55ce98c02b875ba14033952c809ef89ac773"
 url = "https://unofficial-builds.nodejs.org/download/release/v20.20.2/node-v20.20.2-linux-x64-musl.tar.gz"
 
@@ -197,6 +257,67 @@ url = "https://nodejs.org/dist/v20.20.2/node-v20.20.2-darwin-arm64.tar.gz"
 checksum = "sha256:8be6f5e4bb128c82774f8a0b8d7a1cc1365a7977d9657cece0ca647b3fe04e61"
 url = "https://nodejs.org/dist/v20.20.2/node-v20.20.2-darwin-x64.tar.gz"
 
+[tools.node."platforms.macos-x64-baseline"]
+checksum = "sha256:8be6f5e4bb128c82774f8a0b8d7a1cc1365a7977d9657cece0ca647b3fe04e61"
+url = "https://nodejs.org/dist/v20.20.2/node-v20.20.2-darwin-x64.tar.gz"
+
 [tools.node."platforms.windows-x64"]
 checksum = "sha256:dc3700fdd57a63eedb8fd7e3c7baaa32e6a740a1b904167ff4204bc68ed8bf77"
 url = "https://nodejs.org/dist/v20.20.2/node-v20.20.2-win-x64.zip"
+
+[tools.node."platforms.windows-x64-baseline"]
+checksum = "sha256:dc3700fdd57a63eedb8fd7e3c7baaa32e6a740a1b904167ff4204bc68ed8bf77"
+url = "https://nodejs.org/dist/v20.20.2/node-v20.20.2-win-x64.zip"
+
+[[tools.rebar]]
+version = "3.24.0"
+backend = "github:erlang/rebar3"
+specifiers = ["3.24.0"]
+
+[tools.rebar.options]
+asset_pattern = "rebar3"
+
+[tools.rebar."platforms.linux-arm64"]
+url = "https://github.com/erlang/rebar3/releases/download/3.24.0/rebar3"
+url_api = "https://api.github.com/repos/erlang/rebar3/releases/assets/189095797"
+
+[tools.rebar."platforms.linux-arm64-musl"]
+url = "https://github.com/erlang/rebar3/releases/download/3.24.0/rebar3"
+url_api = "https://api.github.com/repos/erlang/rebar3/releases/assets/189095797"
+
+[tools.rebar."platforms.linux-x64"]
+checksum = "blake3:4c643cebcb972c356edc57ca41885369a7dbbeabd10aba5176b663c146b75e69"
+url = "https://github.com/erlang/rebar3/releases/download/3.24.0/rebar3"
+url_api = "https://api.github.com/repos/erlang/rebar3/releases/assets/189095797"
+
+[tools.rebar."platforms.linux-x64-baseline"]
+url = "https://github.com/erlang/rebar3/releases/download/3.24.0/rebar3"
+url_api = "https://api.github.com/repos/erlang/rebar3/releases/assets/189095797"
+
+[tools.rebar."platforms.linux-x64-musl"]
+url = "https://github.com/erlang/rebar3/releases/download/3.24.0/rebar3"
+url_api = "https://api.github.com/repos/erlang/rebar3/releases/assets/189095797"
+
+[tools.rebar."platforms.linux-x64-musl-baseline"]
+url = "https://github.com/erlang/rebar3/releases/download/3.24.0/rebar3"
+url_api = "https://api.github.com/repos/erlang/rebar3/releases/assets/189095797"
+
+[tools.rebar."platforms.macos-arm64"]
+url = "https://github.com/erlang/rebar3/releases/download/3.24.0/rebar3"
+url_api = "https://api.github.com/repos/erlang/rebar3/releases/assets/189095797"
+
+[tools.rebar."platforms.macos-x64"]
+url = "https://github.com/erlang/rebar3/releases/download/3.24.0/rebar3"
+url_api = "https://api.github.com/repos/erlang/rebar3/releases/assets/189095797"
+
+[tools.rebar."platforms.macos-x64-baseline"]
+url = "https://github.com/erlang/rebar3/releases/download/3.24.0/rebar3"
+url_api = "https://api.github.com/repos/erlang/rebar3/releases/assets/189095797"
+
+[tools.rebar."platforms.windows-x64"]
+url = "https://github.com/erlang/rebar3/releases/download/3.24.0/rebar3"
+url_api = "https://api.github.com/repos/erlang/rebar3/releases/assets/189095797"
+
+[tools.rebar."platforms.windows-x64-baseline"]
+url = "https://github.com/erlang/rebar3/releases/download/3.24.0/rebar3"
+url_api = "https://api.github.com/repos/erlang/rebar3/releases/assets/189095797"
