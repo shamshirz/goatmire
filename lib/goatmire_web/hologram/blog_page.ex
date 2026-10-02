@@ -278,7 +278,8 @@ defmodule GoatmireWeb.Hologram.BlogPage do
       <aside class="text-sm text-base-content/60 border-t border-base-300 pt-6 space-y-1">
         <p>
           This UI is Hologram at <code class="px-1">/hologram</code>.
-          Compare with LiveView at <a href="/blog" class="link">/blog</a>.
+          Compare with LiveView at <a href="/blog" class="link">/blog</a>
+          and Gleam/Lustre at <a href="/gleam" class="link">/gleam</a>.
         </p>
         <p>
           Start the server with <code class="px-1">mix holo</code> (or

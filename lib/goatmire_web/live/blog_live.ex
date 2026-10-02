@@ -184,11 +184,12 @@ defmodule GoatmireWeb.BlogLive do
           <% end %>
         </section>
 
-        <aside class="text-sm text-base-content/60 border-t border-base-300 pt-6">
+        <aside class="text-sm text-base-content/60 border-t border-base-300 pt-6 space-y-1">
           <p>
             This UI is LiveView at <code class="px-1">/blog</code>.
-            Compare with the Hologram UI at <a href="/hologram" class="link">/hologram</a>
-            (start the server with <code class="px-1">mix holo</code>).
+            Compare with Hologram at <a href="/hologram" class="link">/hologram</a>
+            (start with <code class="px-1">mix holo</code>) and Gleam/Lustre at
+            <a href="/gleam" class="link">/gleam</a>.
           </p>
         </aside>
       </div>
