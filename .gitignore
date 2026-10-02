@@ -28,6 +28,11 @@ goatmire-*.tar
 # Ignore assets that are produced by build tools.
 /priv/static/assets/
 
+# Gleam/Lustre build outputs (also under priv/static/assets/gleam via lustre_dev_tools)
+/assets/gleam/build/
+/assets/gleam/.lustre/
+/assets/gleam/dist/
+
 # Hologram generated JavaScript bundles.
 /priv/static/hologram/
 

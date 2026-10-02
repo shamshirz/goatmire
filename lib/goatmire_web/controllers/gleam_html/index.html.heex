@@ -1,0 +1,23 @@
+<header class="navbar px-4 sm:px-6 lg:px-8">
+  <div class="flex-1">
+    <a href="/" class="flex-1 flex w-fit items-center gap-2">
+      <img src={~p"/images/logo.svg"} width="36" />
+      <span class="text-sm font-semibold">Goatmire</span>
+    </a>
+  </div>
+  <div class="flex-none">
+    <ul class="flex flex-row px-1 space-x-4 items-center">
+      <li><a href={~p"/blog"} class="btn btn-ghost btn-sm">LiveView /blog</a></li>
+      <li><a href="/hologram" class="btn btn-ghost btn-sm">Hologram /hologram</a></li>
+      <li><a href={~p"/gleam"} class="btn btn-primary btn-sm">Gleam /gleam</a></li>
+    </ul>
+  </div>
+</header>
+
+<main class="px-4 py-8 sm:px-6 lg:px-8">
+  <div id="app">
+    <p class="text-center text-base-content/60">Loading Gleam UI…</p>
+  </div>
+</main>
+
+<script type="module" src={~p"/assets/gleam/goatmire_gleam.js"}></script>

@@ -88,8 +88,10 @@ defmodule Goatmire.MixProject do
     [
       setup: ["deps.get", "ash_sqlite.create", "ash_sqlite.migrate", "run priv/repo/seeds.exs", "assets.setup", "assets.build"],
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
-      "assets.build": ["compile", "tailwind goatmire", "esbuild goatmire"],
+      "assets.gleam": ["cmd --cd assets/gleam gleam run -m lustre/dev build"],
+      "assets.build": ["compile", "assets.gleam", "tailwind goatmire", "esbuild goatmire"],
       "assets.deploy": [
+        "assets.gleam",
         "tailwind goatmire --minify",
         "esbuild goatmire --minify",
         "phx.digest"

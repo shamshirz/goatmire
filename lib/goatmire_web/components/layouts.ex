@@ -45,10 +45,13 @@ defmodule GoatmireWeb.Layouts do
       <div class="flex-none">
         <ul class="flex flex-column px-1 space-x-4 items-center">
           <li>
-            <.link navigate={~p"/blog"} class="btn btn-primary">LiveView /blog</.link>
+            <.link navigate={~p"/blog"} class="btn btn-primary btn-sm">LiveView /blog</.link>
           </li>
           <li>
             <a href="/hologram" class="btn btn-secondary btn-sm">Hologram /hologram</a>
+          </li>
+          <li>
+            <a href={~p"/gleam"} class="btn btn-accent btn-sm">Gleam /gleam</a>
           </li>
           <li>
             <.theme_toggle />
