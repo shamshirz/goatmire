@@ -18,19 +18,30 @@ shared VM boots cleanly without installing Postgres).
 
 ## Prerequisites
 
-- Elixir `~> 1.17` and Erlang/OTP 26+ (this VM uses Elixir 1.18.2 / OTP 27)
-- **Gleam** `>= 1.6` on `PATH` (for the `/gleam` UI; `gleam --version`)
-- SQLite 3 (`sqlite3` on PATH)
-- Hex / Rebar (`mix local.hex`, `mix local.rebar`)
-- Node.js 20+ / npm (Hologram’s compiler installs JS deps under `deps/hologram/assets`)
-
-On this shared VM, put the toolchain on `PATH` first:
+Install [mise](https://mise.jdx.dev), then from the repo root:
 
 ```bash
-export PATH="$HOME/.elixir-install/installs/otp/27.2/bin:$HOME/.elixir-install/installs/elixir/1.18.2-otp-27/bin:$HOME/.local/bin:$PATH"
-# Optional symlink layout used by older notes:
-# export PATH="/home/ubuntu/.local/elixir/1.18.2/bin:/home/ubuntu/.local/otp/OTP-27.2/bin:$HOME/.local/bin:$PATH"
+cd goatmire
+mise install
 ```
+
+That installs the pinned toolchain from `mise.toml`:
+
+| Tool | Version | Why |
+| --- | --- | --- |
+| Erlang/OTP | 27.2.4 | Runtime for Elixir / Mix |
+| Elixir | 1.18.2-otp-27 | App + Hologram `~> 0.10.1` |
+| Gleam | 1.11.1 | `/gleam` Lustre SPA |
+| Node.js | 20.20.2 | Hologram JS asset compile |
+| Bun | 1.2.23 | `lustre_dev_tools` build (`mix assets.gleam`) |
+
+Also needed from the OS (not managed by mise):
+
+- SQLite 3 (`sqlite3` on `PATH`)
+- Hex / Rebar (`mix local.hex`, `mix local.rebar` — usually prompted on first Mix use)
+
+Activate mise in your shell (`mise activate` / direnv / shims) so `elixir`, `mix`,
+`gleam`, `node`, and `bun` resolve to the pinned versions.
 
 If Elixir TLS to Hex fails in a proxied environment, also set:
 
@@ -41,31 +52,28 @@ export SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
 
 and install Hex/Rebar without `builds.hex.pm` if needed (`mix archive.install github hexpm/hex`, manual `rebar3`).
 
-## Install deps
+## Install deps & database
 
 ```bash
-cd /agent/goatmire
-mix deps.get
-mix assets.setup
-```
-
-## Create & migrate the database
-
-```bash
-mix ash_sqlite.create
-mix ash_sqlite.generate_migrations --name init_blog
-mix ash_sqlite.migrate
-mix run priv/repo/seeds.exs
-```
-
-Or in one step after migrations exist:
-
-```bash
+cd goatmire
+mise install
 mix setup
 ```
 
-`mix setup` / `mix assets.build` also compile the Gleam Lustre SPA into
-`priv/static/assets/gleam/` via `mix assets.gleam`.
+`mix setup` runs `deps.get`, creates/migrates SQLite, seeds, installs
+esbuild/tailwind binaries, and builds assets (including the Gleam SPA via
+`mix assets.gleam`).
+
+Manual equivalent:
+
+```bash
+mix deps.get
+mix ash_sqlite.create
+mix ash_sqlite.migrate
+mix run priv/repo/seeds.exs
+mix assets.setup
+mix assets.build
+```
 
 ## Start the server
 

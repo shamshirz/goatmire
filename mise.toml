@@ -1,0 +1,18 @@
+# Toolchain for the full learning app (LiveView + Hologram + Gleam).
+# Install: https://mise.jdx.dev — then from this directory: `mise install`
+#
+# Elixir/OTP versions match what this app builds with today (Hologram ~> 0.10.1
+# on Elixir 1.18 / OTP 27). Gleam powers `/gleam`; Bun is required by
+# lustre_dev_tools; Node is used when Hologram compiles its JS assets.
+# SQLite (`sqlite3`) remains an OS package — not managed by mise.
+
+[tools]
+erlang = "27.2.4"
+elixir = "1.18.2-otp-27"
+gleam = "1.11.1"
+node = "20.20.2"
+bun = "1.2.23"
+
+# Prefer Bob precompiled OTP on Ubuntu (fast); fail rather than a long kerl build.
+[settings]
+erlang.compile = false
