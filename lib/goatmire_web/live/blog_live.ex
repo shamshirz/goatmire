@@ -188,8 +188,8 @@ defmodule GoatmireWeb.BlogLive do
           <p>
             This UI is LiveView at <code class="px-1">/blog</code>.
             Compare with Hologram at <a href="/hologram" class="link">/hologram</a>
-            (start with <code class="px-1">mix holo</code>) and Gleam/Lustre at
-            <a href="/gleam" class="link">/gleam</a>.
+            (start with <code class="px-1">mix holo</code>) and the Gleam/Lustre
+            server component at <a href="/gleam" class="link">/gleam</a>.
           </p>
         </aside>
       </div>

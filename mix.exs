@@ -47,6 +47,7 @@ defmodule Goatmire.MixProject do
       # 0.10.x supports Elixir 1.15+/OTP 24+ (this VM: 1.18/OTP 27).
       # 0.11+ requires Elixir 1.19 and OTP 28.1+.
       {:hologram, "~> 0.10.1"},
+      {:lustre, "~> 5.0", app: false, manager: :rebar3},
       {:phoenix, "~> 1.8.15"},
       {:phoenix_html, "~> 4.1"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
@@ -86,9 +87,17 @@ defmodule Goatmire.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      setup: ["deps.get", "ash_sqlite.create", "ash_sqlite.migrate", "run priv/repo/seeds.exs", "assets.setup", "assets.build"],
+      setup: [
+        "deps.get",
+        "ash_sqlite.create",
+        "ash_sqlite.migrate",
+        "run priv/repo/seeds.exs",
+        "goatmire.compile_gleam",
+        "assets.setup",
+        "assets.build"
+      ],
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
-      "assets.gleam": ["cmd --cd assets/gleam gleam run -m lustre/dev build"],
+      "assets.gleam": ["goatmire.compile_gleam", "goatmire.gleam_assets"],
       "assets.build": ["compile", "assets.gleam", "tailwind goatmire", "esbuild goatmire"],
       "assets.deploy": [
         "assets.gleam",

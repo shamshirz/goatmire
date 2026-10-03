@@ -1,8 +1,9 @@
+import gleam/dynamic.{type Dynamic}
 import gleam/dynamic/decode
 import gleam/int
-import gleam/json
 import gleam/list
 import gleam/option.{type Option, None, Some}
+import gleam/result
 import gleam/string
 import lustre
 import lustre/attribute
@@ -10,10 +11,15 @@ import lustre/effect.{type Effect}
 import lustre/element.{type Element}
 import lustre/element/html
 import lustre/event
-import rsvp
+
+/// Lustre app constructor used by `GoatmireWeb.GleamSocket` via
+/// `:lustre.start_server_component/2`. Runs on the Erlang target (BEAM).
+pub fn component() -> lustre.App(Nil, Model, Msg) {
+  lustre.application(init, update, view)
+}
 
 // ---------------------------------------------------------------------------
-// Domain types (mirror Ash Author / Post JSON from /api)
+// Domain
 // ---------------------------------------------------------------------------
 
 pub type Post {
@@ -43,24 +49,17 @@ pub type Msg {
   PostAuthorChanged(String)
   PostTitleChanged(String)
   PostBodyChanged(String)
-  /// Prefer FormData from the submit event so automation / paste still works
-  /// even if `on_input` did not update the model.
   SubmitAuthor(List(#(String, String)))
   SubmitPost(List(#(String, String)))
   AuthorCreateFinished(Result(Author, String))
   PostCreateFinished(Result(Post, String))
+  /// Dispatched from Elixir when Ash PubSub fires (multi-tab sync).
   BlogChanged
 }
 
 // ---------------------------------------------------------------------------
-// Entry
+// Init / update
 // ---------------------------------------------------------------------------
-
-pub fn main() -> Nil {
-  let app = lustre.application(init, update, view)
-  let assert Ok(_) = lustre.start(app, "#app", Nil)
-  Nil
-}
 
 fn init(_flags: Nil) -> #(Model, Effect(Msg)) {
   let model =
@@ -75,7 +74,7 @@ fn init(_flags: Nil) -> #(Model, Effect(Msg)) {
       loading: True,
     )
 
-  #(model, effect.batch([load_authors(), subscribe_sse()]))
+  #(model, reload_authors())
 }
 
 fn update(model: Model, msg: Msg) -> #(Model, Effect(Msg)) {
@@ -117,7 +116,7 @@ fn update(model: Model, msg: Msg) -> #(Model, Effect(Msg)) {
         )
         _ -> #(
           Model(..model, author_name: name, flash: None, error: None),
-          create_author(name),
+          create_author_effect(name),
         )
       }
     }
@@ -152,7 +151,7 @@ fn update(model: Model, msg: Msg) -> #(Model, Effect(Msg)) {
             flash: None,
             error: None,
           ),
-          create_post(author_id, title, body),
+          create_post_effect(author_id, title, body),
         )
       }
     }
@@ -168,8 +167,7 @@ fn update(model: Model, msg: Msg) -> #(Model, Effect(Msg)) {
         ),
         error: None,
       ),
-      // List refresh also arrives via SSE; reload immediately for this tab.
-      load_authors(),
+      reload_authors(),
     )
 
     AuthorCreateFinished(Error(message)) -> #(
@@ -185,7 +183,7 @@ fn update(model: Model, msg: Msg) -> #(Model, Effect(Msg)) {
         flash: Some("Created post “" <> post.title <> "”."),
         error: None,
       ),
-      load_authors(),
+      reload_authors(),
     )
 
     PostCreateFinished(Error(message)) -> #(
@@ -193,98 +191,70 @@ fn update(model: Model, msg: Msg) -> #(Model, Effect(Msg)) {
       effect.none(),
     )
 
-    BlogChanged -> #(model, load_authors())
+    BlogChanged -> #(model, reload_authors())
   }
 }
 
 // ---------------------------------------------------------------------------
-// HTTP + SSE effects
+// In-process Ash effects (Elixir façade)
 // ---------------------------------------------------------------------------
 
-fn load_authors() -> Effect(Msg) {
-  let decoder = {
-    use data <- decode.field("data", decode.list(author_decoder()))
-    decode.success(data)
-  }
-
-  rsvp.get("/api/authors", rsvp.expect_json(decoder, map_authors_result))
+fn reload_authors() -> Effect(Msg) {
+  effect.from(fn(dispatch) { dispatch(AuthorsLoaded(list_authors())) })
 }
 
-fn map_authors_result(result: Result(List(Author), rsvp.Error(String))) -> Msg {
-  AuthorsLoaded(result_to_string_error(result))
+fn create_author_effect(name: String) -> Effect(Msg) {
+  effect.from(fn(dispatch) { dispatch(AuthorCreateFinished(create_author(name))) })
 }
 
-fn create_author(name: String) -> Effect(Msg) {
-  let body = json.object([#("name", json.string(name))])
-  let decoder = {
-    use data <- decode.field("data", author_decoder())
-    decode.success(data)
-  }
-
-  rsvp.post(
-    "/api/authors",
-    body,
-    rsvp.expect_json(decoder, map_author_create_result),
-  )
-}
-
-fn map_author_create_result(result: Result(Author, rsvp.Error(String))) -> Msg {
-  AuthorCreateFinished(result_to_string_error(result))
-}
-
-fn create_post(author_id: String, title: String, body: String) -> Effect(Msg) {
-  let payload =
-    json.object([
-      #("author_id", json.string(author_id)),
-      #("title", json.string(title)),
-      #("body", json.string(body)),
-    ])
-
-  let decoder = {
-    use data <- decode.field("data", post_decoder())
-    decode.success(data)
-  }
-
-  rsvp.post(
-    "/api/posts",
-    payload,
-    rsvp.expect_json(decoder, map_post_create_result),
-  )
-}
-
-fn map_post_create_result(result: Result(Post, rsvp.Error(String))) -> Msg {
-  PostCreateFinished(result_to_string_error(result))
-}
-
-fn result_to_string_error(
-  result: Result(a, rsvp.Error(String)),
-) -> Result(a, String) {
-  case result {
-    Ok(value) -> Ok(value)
-    Error(error) -> Error(rsvp_error_to_string(error))
-  }
-}
-
-fn rsvp_error_to_string(error: rsvp.Error(String)) -> String {
-  case error {
-    rsvp.BadBody -> "Invalid response body from API"
-    rsvp.BadUrl(url) -> "Bad API URL: " <> url
-    rsvp.HttpError(response) ->
-      "HTTP " <> int.to_string(response.status) <> " from API"
-    rsvp.JsonError(_) -> "Could not decode API JSON"
-    rsvp.NetworkError -> "Network error talking to API"
-    rsvp.UnhandledResponse(response) ->
-      "Unexpected HTTP " <> int.to_string(response.status)
-  }
-}
-
-@external(javascript, "./sse_ffi.mjs", "subscribe")
-fn do_subscribe_sse(url: String, on_event: fn() -> Nil) -> Nil
-
-fn subscribe_sse() -> Effect(Msg) {
+fn create_post_effect(author_id: String, title: String, body: String) -> Effect(
+  Msg,
+) {
   effect.from(fn(dispatch) {
-    do_subscribe_sse("/api/blog/events", fn() { dispatch(BlogChanged) })
+    dispatch(PostCreateFinished(create_post(author_id, title, body)))
   })
+}
+
+@external(erlang, "Elixir.Goatmire.Blog.GleamFacade", "list_authors")
+fn list_authors_raw() -> Dynamic
+
+@external(erlang, "Elixir.Goatmire.Blog.GleamFacade", "create_author")
+fn create_author_raw(name: String) -> Result(Dynamic, String)
+
+@external(erlang, "Elixir.Goatmire.Blog.GleamFacade", "create_post")
+fn create_post_raw(
+  author_id: String,
+  title: String,
+  body: String,
+) -> Result(Dynamic, String)
+
+fn list_authors() -> Result(List(Author), String) {
+  case decode.run(list_authors_raw(), decode.list(author_decoder())) {
+    Ok(authors) -> Ok(authors)
+    Error(_) -> Error("Could not decode authors from Ash façade")
+  }
+}
+
+fn create_author(name: String) -> Result(Author, String) {
+  case create_author_raw(name) {
+    Ok(dyn) ->
+      decode.run(dyn, author_decoder())
+      |> result.map_error(fn(_) { "Could not decode created author" })
+    Error(message) -> Error(message)
+  }
+}
+
+fn create_post(
+  author_id: String,
+  title: String,
+  body: String,
+) -> Result(Post, String) {
+  case create_post_raw(author_id, title, body) {
+    Ok(dyn) ->
+      decode.run(dyn, post_decoder())
+      |> result.map_error(fn(_) { "Could not decode created post" })
+    Error(message) -> Error(message)
+  }
 }
 
 fn author_decoder() -> decode.Decoder(Author) {
@@ -334,14 +304,14 @@ fn header_section() -> Element(Msg) {
   html.header([attribute.class("space-y-2")], [
     html.p(
       [attribute.class("text-sm uppercase tracking-wide text-base-content/60")],
-      [html.text("Ash + Gleam/Lustre demo")],
+      [html.text("Ash + Gleam/Lustre server component")],
     ),
     html.h1([attribute.class("text-3xl font-bold")], [
       html.text("Goatmire Blog"),
     ]),
     html.p([attribute.class("text-base-content/80")], [
       html.text(
-        "Same domain as LiveView and Hologram: create an Author, then add Posts. Open this page in two browser tabs — changes sync via Server-Sent Events bridged from Ash PubSub.",
+        "Same domain as LiveView and Hologram: create an Author, then add Posts. Gleam runs on the BEAM as a Lustre server component and calls Ash in-process. Open two tabs — changes sync via Ash PubSub.",
       ),
     ]),
   ])
@@ -587,7 +557,9 @@ fn footer_section() -> Element(Msg) {
     ],
     [
       html.p([], [
-        html.text("This UI is Gleam/Lustre at "),
+        html.text("This UI is a Gleam/Lustre "),
+        html.strong([], [html.text("server component")]),
+        html.text(" at "),
         html.code([attribute.class("px-1")], [html.text("/gleam")]),
         html.text(". Compare with LiveView at "),
         html.a([attribute.href("/blog"), attribute.class("link")], [
@@ -601,7 +573,7 @@ fn footer_section() -> Element(Msg) {
       ]),
       html.p([], [
         html.text(
-          "State lives in the browser; Ash is reached over JSON HTTP. Multi-tab sync uses SSE from Ash PubSub.",
+          "State and Ash access live on the BEAM; the browser runs Lustre’s thin client runtime over WebSocket.",
         ),
       ]),
     ],

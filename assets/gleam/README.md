@@ -1,12 +1,10 @@
-# Goatmire Gleam / Lustre SPA
+# Goatmire Gleam / Lustre **server component**
 
-Browser UI for the shared Ash blog domain. Built with:
+Erlang-target Lustre app started by `GoatmireWeb.GleamSocket`. Ash is reached
+in-process through `Goatmire.Blog.GleamFacade`.
 
 ```bash
 # from repo root
-mix assets.gleam
-# or:
-cd assets/gleam && gleam run -m lustre/dev build
+mix goatmire.compile_gleam
+mix goatmire.gleam_assets   # copies lustre-server-component.min.mjs
 ```
-
-Output lands in `priv/static/assets/gleam/` and is served by Phoenix at `/gleam`.

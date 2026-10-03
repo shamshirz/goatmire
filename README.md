@@ -5,7 +5,7 @@ same domain:
 
 - **Phoenix LiveView** at `/blog`
 - **Hologram** at `/hologram`
-- **Gleam/Lustre SPA** at `/gleam` (JSON API + SSE)
+- **Gleam/Lustre server component** at `/gleam` (Erlang target, in-process Ash)
 
 No authentication. Data is stored in **SQLite** via **AshSqlite** (chosen so this
 shared VM boots cleanly without installing Postgres).
@@ -19,7 +19,7 @@ shared VM boots cleanly without installing Postgres).
 ## Prerequisites
 
 - Elixir `~> 1.17` and Erlang/OTP 26+ (this VM uses Elixir 1.18.2 / OTP 27)
-- **Gleam** `>= 1.6` on `PATH` (for the `/gleam` UI; `gleam --version`)
+- **Gleam** `>= 1.6` on `PATH` (for the `/gleam` server component)
 - SQLite 3 (`sqlite3` on PATH)
 - Hex / Rebar (`mix local.hex`, `mix local.rebar`)
 - Node.js 20+ / npm (Hologram’s compiler installs JS deps under `deps/hologram/assets`)
@@ -28,8 +28,6 @@ On this shared VM, put the toolchain on `PATH` first:
 
 ```bash
 export PATH="$HOME/.elixir-install/installs/otp/27.2/bin:$HOME/.elixir-install/installs/elixir/1.18.2-otp-27/bin:$HOME/.local/bin:$PATH"
-# Optional symlink layout used by older notes:
-# export PATH="/home/ubuntu/.local/elixir/1.18.2/bin:/home/ubuntu/.local/otp/OTP-27.2/bin:$HOME/.local/bin:$PATH"
 ```
 
 If Elixir TLS to Hex fails in a proxied environment, also set:
@@ -64,8 +62,9 @@ Or in one step after migrations exist:
 mix setup
 ```
 
-`mix setup` / `mix assets.build` also compile the Gleam Lustre SPA into
-`priv/static/assets/gleam/` via `mix assets.gleam`.
+`mix setup` / `mix assets.build` compile the Gleam Erlang app
+(`mix goatmire.compile_gleam`) and copy the Lustre server-component client
+runtime (`mix goatmire.gleam_assets`).
 
 ## Start the server
 
@@ -88,10 +87,12 @@ mix holo
 This app pins **Hologram `~> 0.10.1`** (works on Elixir 1.18 / OTP 27). Hologram
 0.11+ needs Elixir 1.19 and OTP 28.1+.
 
-Rebuild Gleam alone after editing `assets/gleam`:
+Rebuild Gleam after editing `assets/gleam`:
 
 ```bash
-mix assets.gleam
+mix goatmire.compile_gleam
+# client runtime (once, or after upgrading lustre):
+mix goatmire.gleam_assets
 ```
 
 ## URLs
@@ -100,11 +101,10 @@ mix assets.gleam
 | --- | --- |
 | http://localhost:4000/blog | LiveView demo (create/list authors & posts) |
 | http://localhost:4000/hologram | Hologram demo (same domain, isomorphic UI) |
-| http://localhost:4000/gleam | Gleam/Lustre SPA (JSON API + SSE) |
+| http://localhost:4000/gleam | Gleam/Lustre **server component** (in-process Ash) |
 | http://localhost:4000/ | Home (links to all demos) |
 | http://localhost:4000/dev/dashboard | LiveDashboard (dev only) |
-| http://localhost:4000/api/authors | JSON list (used by Gleam) |
-| http://localhost:4000/api/blog/events | SSE blog change stream |
+| ws://localhost:4000/gleam/socket/websocket | Lustre SC transport |
 
 ## Multi-tab reactivity
 
@@ -115,9 +115,10 @@ mix assets.gleam
   also forwards Ash PubSub `authors:changed` / `posts:changed` into
   `Hologram.Realtime.broadcast_action/2`, so LiveView creates refresh open
   Hologram tabs too.
-- **Gleam `/gleam`** — browser state + `fetch` to `/api/*`. An `EventSource` on
-  `/api/blog/events` listens to the same Ash PubSub topics and refetches the
-  author list when anything changes (including creates from LiveView/Hologram).
+- **Gleam `/gleam`** — each tab owns a Lustre server-component process on the
+  BEAM. `GoatmireWeb.GleamSocket` subscribes to the same Ash PubSub topics and
+  dispatches `:blog_changed` into that runtime so lists refetch. Ash creates
+  happen in-process via `Goatmire.Blog.GleamFacade` (no JSON API).
 
 See Project Agent Store docs (`gleam-comparison.md`, `hologram-comparison.md`,
 `ash-liveview-app.md`) for side-by-side walkthroughs.

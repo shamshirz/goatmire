@@ -15,6 +15,11 @@ defmodule GoatmireWeb.Endpoint do
     websocket: [connect_info: [session: @session_options]],
     longpoll: [connect_info: [session: @session_options]]
 
+  # Lustre server component transport for /gleam (one runtime per connection).
+  socket "/gleam/socket", GoatmireWeb.GleamSocket,
+    websocket: true,
+    longpoll: false
+
   # Serve at "/" the static files from "priv/static" directory.
   #
   # When code reloading is disabled (e.g., in production),

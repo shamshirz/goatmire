@@ -10,15 +10,6 @@ defmodule GoatmireWeb.Router do
     plug :put_secure_browser_headers
   end
 
-  pipeline :api do
-    plug :accepts, ["json"]
-  end
-
-  # SSE is text/event-stream; EventSource sets Accept accordingly.
-  pipeline :sse do
-    plug :put_secure_browser_headers
-  end
-
   scope "/", GoatmireWeb do
     pipe_through :browser
 
@@ -27,25 +18,11 @@ defmodule GoatmireWeb.Router do
     # Ash + LiveView learning UI (Author has_many Posts)
     live "/blog", BlogLive, :index
 
-    # Gleam/Lustre SPA shell (assets built from assets/gleam)
+    # Gleam/Lustre server component shell (BEAM runtime over /gleam/socket)
     get "/gleam", GleamController, :index
 
     # /hologram is served by Hologram (GoatmireWeb.Hologram.BlogPage) via
     # `plug Hologram.Router` in the endpoint — not a Phoenix live route.
-  end
-
-  scope "/api", GoatmireWeb.Api do
-    pipe_through :api
-
-    get "/authors", BlogController, :index_authors
-    post "/authors", BlogController, :create_author
-    post "/posts", BlogController, :create_post
-  end
-
-  scope "/api", GoatmireWeb.Api do
-    pipe_through :sse
-
-    get "/blog/events", BlogController, :events
   end
 
   # Enable LiveDashboard in development

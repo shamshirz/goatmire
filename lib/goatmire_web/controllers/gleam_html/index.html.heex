@@ -15,9 +15,14 @@
 </header>
 
 <main class="px-4 py-8 sm:px-6 lg:px-8">
-  <div id="app">
-    <p class="text-center text-base-content/60">Loading Gleam UI…</p>
+  <div class="mx-auto max-w-3xl">
+    <lustre-server-component route="/gleam/socket/websocket">
+      <p class="text-center text-base-content/60 py-8">
+        Connecting Gleam/Lustre server component…
+      </p>
+    </lustre-server-component>
   </div>
 </main>
 
-<script type="module" src={~p"/assets/gleam/goatmire_gleam.js"}></script>
+<script type="module" src={~p"/assets/gleam/lustre-server-component.min.mjs"}>
+</script>

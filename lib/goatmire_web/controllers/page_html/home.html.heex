@@ -3,7 +3,8 @@
   <h1 class="text-3xl font-bold">Goatmire</h1>
   <p class="text-base-content/80">
     Minimal Ash Framework learning app with three UIs for the same authors/posts domain:
-    Phoenix LiveView, Hologram, and Gleam/Lustre. All three can update across browser tabs.
+    Phoenix LiveView, Hologram, and a Gleam/Lustre <strong>server component</strong>
+    (BEAM process + thin client runtime). All three can update across browser tabs.
   </p>
   <p class="flex flex-wrap gap-3">
     <a href={~p"/blog"} class="btn btn-primary">LiveView /blog</a>
@@ -12,7 +13,8 @@
   </p>
   <p class="text-sm text-base-content/60">
     Database: SQLite via AshSqlite (see README). For Hologram in dev, start with
-    <code>mix holo</code> (sets <code>HOLOGRAM_START=1</code>). Gleam assets build with
-    <code>mix assets.gleam</code> (or as part of <code>mix assets.build</code>).
+    <code>mix holo</code> (sets <code>HOLOGRAM_START=1</code>). Gleam needs
+    <code>mix goatmire.compile_gleam</code> (Erlang target) and
+    <code>mix goatmire.gleam_assets</code> (client runtime).
   </p>
 </div>
